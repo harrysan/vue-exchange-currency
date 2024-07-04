@@ -1,0 +1,48 @@
+.mulish-light {
+  font-family: "Mulish", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 300;
+  font-style: normal;
+}
+.mulish-normal {
+  font-family: "Mulish", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+.mulish-medium {
+  font-family: "Mulish", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+}
+.mulish-semibold {
+  font-family: "Mulish", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-style: normal;
+}
+.mulish-bold {
+  font-family: "Mulish", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 700;
+  font-style: normal;
+}
+
+/* 
+White : F9FAFB 
+Dark : 171D33
+Grey : 3B414B
+Bold : 463C6A
+Light : 613EEA
+*/
+
+.background-bold {
+  background-color: #463c6a;
+}
+.background-light {
+  background-color: #613eea;
+}
+.text-white {
+  color: #f9fafb;
+}
