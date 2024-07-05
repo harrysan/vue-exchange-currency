@@ -1,3 +1,4 @@
+/*-----FONT-----*/
 .mulish-light {
   font-family: "Mulish", sans-serif;
   font-optical-sizing: auto;
@@ -29,6 +30,7 @@
   font-style: normal;
 }
 
+/*-----COLOR-----*/
 /* 
 White : F9FAFB 
 Dark : 171D33
@@ -36,7 +38,6 @@ Grey : 3B414B
 Bold : 463C6A
 Light : 613EEA
 */
-
 .background-bold {
   background-color: #463c6a;
 }
@@ -46,3 +47,5 @@ Light : 613EEA
 .text-white {
   color: #f9fafb;
 }
+
+/*-----IMAGE-----*/
