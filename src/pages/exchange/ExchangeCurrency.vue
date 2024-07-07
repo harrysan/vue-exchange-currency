@@ -1,5 +1,6 @@
 <template>
   <div class="container-lg py-3">
+    <!-- Top Content -->
     <h3 class="mulish-semibold text-dark mb-4">Exchange Currency</h3>
     <div class="container shadow p-3 mb-5 bg-body rounded px-2 py-1">
       <div class="row">
@@ -97,6 +98,89 @@
         </div>
       </div>
     </div>
+    <!-- Bottom Content -->
+    <h3 class="mulish-semibold text-dark mb-4">Rate Currency</h3>
+    <div class="container p-3 mb-5 bg-body rounded px-2 py-1">
+      <div class="row">
+        <div class="col p-3">
+          <div
+            class="d-flex gap-2 flex-row align-items-start align-self-center"
+          >
+            <div>
+              <select
+                class="form-select select-curr first-item-bottom px-2 py-2"
+                aria-label="Select Currency"
+                v-model="value3"
+              >
+                <base-option :currencies="currencies"></base-option>
+              </select>
+            </div>
+
+            <base-button>Print</base-button>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col p-3">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Rate</th>
+                <th scope="col">Name</th>
+                <th scope="col">IDR Rupiah</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>USD/IDR</td>
+                <td>1 US Dollar</td>
+                <td>@16.000</td>
+              </tr>
+              <tr>
+                <td>EUR/IDR</td>
+                <td>1 Euro</td>
+                <td>16.000</td>
+              </tr>
+              <tr>
+                <td>EUR/IDR</td>
+                <td>1 Euro</td>
+                <td>16.000</td>
+              </tr>
+              <tr>
+                <td>EUR/IDR</td>
+                <td>1 Euro</td>
+                <td>16.000</td>
+              </tr>
+              <tr>
+                <td>EUR/IDR</td>
+                <td>1 Euro</td>
+                <td>16.000</td>
+              </tr>
+              <tr>
+                <td>EUR/IDR</td>
+                <td>1 Euro</td>
+                <td>16.000</td>
+              </tr>
+              <tr>
+                <td>EUR/IDR</td>
+                <td>1 Euro</td>
+                <td>16.000</td>
+              </tr>
+              <tr>
+                <td>EUR/IDR</td>
+                <td>1 Euro</td>
+                <td>16.000</td>
+              </tr>
+              <tr>
+                <td>EUR/IDR</td>
+                <td>1 Euro</td>
+                <td>16.000</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -113,6 +197,7 @@ export default {
     const currencies = store.getters.currencies;
     const value1 = ref("");
     const value2 = ref("");
+    const value3 = ref("");
     const isCopied = ref(false);
 
     const now = new Date();
@@ -122,7 +207,15 @@ export default {
       console.log("copy text clicked");
     }
 
-    return { value1, value2, datetoday, currencies, isCopied, copyText };
+    return {
+      value1,
+      value2,
+      value3,
+      datetoday,
+      currencies,
+      isCopied,
+      copyText,
+    };
   },
 };
 </script>
@@ -130,7 +223,8 @@ export default {
 <style scoped>
 /* small screen */
 @media (max-width: 575.98px) {
-  .first-item {
+  .first-item,
+  .first-item-bottom {
     margin-bottom: 1rem;
   }
   .exchange-icon {
@@ -144,11 +238,14 @@ export default {
 
 @media (min-width: 576px) {
   .first-item {
-    margin-right: 5rem;
+    margin-right: 2rem;
   }
   .exchange-icon {
     margin-left: 1.5rem;
     margin-right: 1.3rem;
+  }
+  .first-item-bottom {
+    margin-right: 3rem;
   }
 }
 
@@ -157,9 +254,15 @@ export default {
   .first-item {
     margin-right: 9rem;
   }
+  .first-item-bottom {
+    margin-right: 1rem;
+  }
   .exchange-icon {
     margin-left: 3.5rem;
     margin-right: 3.3rem;
+  }
+  .table {
+    width: 800px;
   }
 }
 

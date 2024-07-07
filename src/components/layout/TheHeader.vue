@@ -3,7 +3,7 @@
     <div class="container-fluid">
       <a class="navbar-brand text-white" href="#">
         <img
-          src="../../assets/logo.png"
+          src="../../assets/icon/currency1.png"
           class="img-fluid"
           width="24"
           height="20"
