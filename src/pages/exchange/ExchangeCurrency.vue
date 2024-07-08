@@ -32,6 +32,7 @@
               class="form-select select-curr first-item px-2 py-2"
               aria-label="Select Currency"
               v-model="value1"
+              @change="onChange"
             >
               <base-option :currencies="currencies"></base-option>
             </select>
@@ -40,6 +41,7 @@
               class="form-select select-curr px-2 py-2"
               aria-label="Select Currency"
               v-model="value2"
+              @change="onChange"
             >
               <base-option :currencies="currencies"></base-option>
             </select>
@@ -53,11 +55,15 @@
           >
             <div class="px-2 py-2 border rounded result">
               <div class="d-flex justify-content-between">
-                <div>1</div>
+                <div>{{ result1 }}</div>
                 <div>
-                  <span @click="copyText"
-                    ><i class="fa fa-clipboard link-icon" aria-hidden="true"></i
-                    ><span v-if="isCopied">(Copied to clipboard!)</span></span
+                  <span @click="copyText('result1', result1)"
+                    ><i
+                      class="fa fa-clipboard link-icon"
+                      :class="{ selClass: isCopied1 }"
+                      aria-hidden="true"
+                    ></i
+                    ><span v-if="isCopied1">copied!</span></span
                   >
                 </div>
               </div>
@@ -73,11 +79,15 @@
             </div>
             <div class="px-2 py-2 border rounded result">
               <div class="d-flex justify-content-between">
-                <div>16000</div>
+                <div>{{ result2 }}</div>
                 <div>
-                  <span @click="copyText"
-                    ><i class="fa fa-clipboard link-icon" aria-hidden="true"></i
-                    ><span v-if="isCopied">(Copied to clipboard!)</span></span
+                  <span @click="copyText('result2', result2)"
+                    ><i
+                      class="fa fa-clipboard link-icon"
+                      :class="{ selClass: isCopied2 }"
+                      aria-hidden="true"
+                    ></i
+                    ><span v-if="isCopied2">copied!</span></span
                   >
                 </div>
               </div>
@@ -92,7 +102,7 @@
               >*Exchange rate may change during transaction process.</small
             >
             <small class="text-muted"
-              >*Last updated currency {{ datetoday }}.</small
+              >*Last updated currency {{ dateApi }}.</small
             >
           </div>
         </div>
@@ -198,22 +208,73 @@ export default {
     const value1 = ref("");
     const value2 = ref("");
     const value3 = ref("");
-    const isCopied = ref(false);
+    const result1 = ref("");
+    const result2 = ref("");
+    const dateApi = ref("");
+    const isCopied1 = ref(false);
+    const isCopied2 = ref(false);
 
     const now = new Date();
     const datetoday = dateFormat(now, "dddd, mmmm dS, yyyy, h:MM:ss TT");
 
-    function copyText() {
-      console.log("copy text clicked");
+    async function onChange(event) {
+      console.log(event.target.value);
+
+      if (value2.value) {
+        const value1LowerCase = value1.value.toLowerCase();
+        const value2LowerCase = value2.value.toLowerCase();
+
+        const response = await fetch(
+          `https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/${value1LowerCase}.json`,
+          {
+            method: "GET",
+          }
+        );
+        const responseData = await response.json();
+        if (!response.ok) {
+          const error = new Error(console.log("Failed to fetch requests."));
+          throw error;
+        }
+
+        const responseval1 = responseData[value1LowerCase];
+
+        dateApi.value = responseData.date;
+        result1.value = 1;
+        result2.value = responseval1[value2LowerCase];
+      }
+    }
+
+    function copyText(params1, params2) {
+      console.log(params1, params2);
+      if (params1 === "result1") {
+        isCopied1.value = true;
+        setTimeout(() => {
+          isCopied1.value = false;
+        }, 3000);
+      } else if (params1 === "result2") {
+        isCopied2.value = true;
+        setTimeout(() => {
+          isCopied2.value = false;
+        }, 3000);
+      }
+
+      navigator.clipboard.writeText(params2).catch((err) => {
+        console.error("Could not copy text: ", err);
+      });
     }
 
     return {
       value1,
       value2,
       value3,
+      result1,
+      result2,
+      dateApi,
+      onChange,
       datetoday,
       currencies,
-      isCopied,
+      isCopied1,
+      isCopied2,
       copyText,
     };
   },
@@ -276,5 +337,11 @@ export default {
 .result {
   width: 300px;
   white-space: normal;
+}
+
+.selClass {
+  border: solid #613eea 1px;
+  visibility: hidden;
+  /* background-color: white; */
 }
 </style>
