@@ -53,21 +53,12 @@
           <div
             class="d-flex flex-column flex-sm-row justify-content-start align-self-center"
           >
-            <div class="px-2 py-2 border rounded result">
-              <div class="d-flex justify-content-between">
-                <div>{{ result1 }}</div>
-                <div>
-                  <span @click="copyText('result1', result1)"
-                    ><i
-                      class="fa fa-clipboard link-icon"
-                      :class="{ selClass: isCopied1 }"
-                      aria-hidden="true"
-                    ></i
-                    ><span v-if="isCopied1">copied!</span></span
-                  >
-                </div>
-              </div>
-            </div>
+            <input
+              type="number"
+              v-model="result1"
+              @input="onChangeResult1"
+              class="px-2 py-2 border rounded result"
+            />
             <div class="exchange-icon">
               <img
                 src="../../assets/icon/exchange.png"
@@ -197,7 +188,7 @@
 <script>
 import dateFormat from "dateformat";
 import { useStore } from "vuex";
-import { ref } from "vue";
+import { reactive, ref } from "vue";
 import BaseOption from "../../components/ui/BaseOption.vue";
 
 export default {
@@ -213,34 +204,59 @@ export default {
     const dateApi = ref("");
     const isCopied1 = ref(false);
     const isCopied2 = ref(false);
+    const returnData = reactive({ date: "", resultConvert: "" });
 
     const now = new Date();
     const datetoday = dateFormat(now, "dddd, mmmm dS, yyyy, h:MM:ss TT");
 
+    async function makeRequest() {
+      const value1LowerCase = value1.value.toLowerCase();
+      const value2LowerCase = value2.value.toLowerCase();
+
+      const response = await fetch(
+        `https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/${value1LowerCase}.json`,
+        {
+          method: "GET",
+        }
+      );
+      const responseData = await response.json();
+      if (!response.ok) {
+        const error = new Error(console.log("Failed to fetch requests."));
+        throw error;
+      }
+
+      const responseval1 = responseData[value1LowerCase];
+      (returnData.date = responseData.date),
+        (returnData.resultConvert = responseval1[value2LowerCase]);
+
+      console.log(returnData);
+
+      return returnData;
+    }
+
     async function onChange(event) {
       console.log(event.target.value);
 
-      if (value2.value) {
-        const value1LowerCase = value1.value.toLowerCase();
-        const value2LowerCase = value2.value.toLowerCase();
-
-        const response = await fetch(
-          `https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/${value1LowerCase}.json`,
-          {
-            method: "GET",
-          }
-        );
-        const responseData = await response.json();
-        if (!response.ok) {
-          const error = new Error(console.log("Failed to fetch requests."));
-          throw error;
-        }
-
-        const responseval1 = responseData[value1LowerCase];
-
-        dateApi.value = responseData.date;
+      if (result1.value == 0) {
         result1.value = 1;
-        result2.value = responseval1[value2LowerCase];
+      }
+
+      if (value2.value) {
+        await makeRequest();
+
+        dateApi.value = returnData.date;
+        result2.value = result1.value * returnData.resultConvert;
+      }
+    }
+
+    function onChangeResult1(e) {
+      console.log(e.target.value);
+
+      if (value2.value) {
+        result2.value = e.target.value * returnData.resultConvert;
+      } else {
+        alert("Please select second currency!");
+        result1.value = 1;
       }
     }
 
@@ -271,6 +287,7 @@ export default {
       result2,
       dateApi,
       onChange,
+      onChangeResult1,
       datetoday,
       currencies,
       isCopied1,
