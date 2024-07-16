@@ -112,6 +112,7 @@
                 class="form-select select-curr first-item-bottom px-2 py-2"
                 aria-label="Select Currency"
                 v-model="value3"
+                @change="onChange2"
               >
                 <base-option :currencies="currencies"></base-option>
               </select>
@@ -128,54 +129,14 @@
               <tr>
                 <th scope="col">Rate</th>
                 <th scope="col">Name</th>
-                <th scope="col">IDR Rupiah</th>
+                <th scope="col">1 {{ value3 }}</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>USD/IDR</td>
-                <td>1 US Dollar</td>
-                <td>@16.000</td>
-              </tr>
-              <tr>
-                <td>EUR/IDR</td>
-                <td>1 Euro</td>
-                <td>16.000</td>
-              </tr>
-              <tr>
-                <td>EUR/IDR</td>
-                <td>1 Euro</td>
-                <td>16.000</td>
-              </tr>
-              <tr>
-                <td>EUR/IDR</td>
-                <td>1 Euro</td>
-                <td>16.000</td>
-              </tr>
-              <tr>
-                <td>EUR/IDR</td>
-                <td>1 Euro</td>
-                <td>16.000</td>
-              </tr>
-              <tr>
-                <td>EUR/IDR</td>
-                <td>1 Euro</td>
-                <td>16.000</td>
-              </tr>
-              <tr>
-                <td>EUR/IDR</td>
-                <td>1 Euro</td>
-                <td>16.000</td>
-              </tr>
-              <tr>
-                <td>EUR/IDR</td>
-                <td>1 Euro</td>
-                <td>16.000</td>
-              </tr>
-              <tr>
-                <td>EUR/IDR</td>
-                <td>1 Euro</td>
-                <td>16.000</td>
+              <tr v-for="curr in currencies" :key="curr.code">
+                <td>{{ value3 }}/{{ curr.code }}</td>
+                <td>{{ curr.name }}</td>
+                <td>{{ curr.rate }}</td>
               </tr>
             </tbody>
           </table>
@@ -249,6 +210,32 @@ export default {
       }
     }
 
+    async function onChange2(e) {
+      console.log(e.target.value);
+
+      const listValue = e.target.value.toLowerCase();
+      const response = await fetch(
+        `https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/${listValue}.json`,
+        {
+          method: "GET",
+        }
+      );
+      const responseData = await response.json();
+      if (!response.ok) {
+        const error = new Error(console.log("Failed to fetch requests."));
+        throw error;
+      }
+      console.log(responseData);
+
+      const responseval3 = responseData[listValue];
+      console.log(responseval3);
+
+      for (const val in currencies) {
+        console.log(currencies[val]);
+        currencies[val].rate = responseval3[currencies[val].code.toLowerCase()];
+      }
+    }
+
     function onChangeResult1(e) {
       console.log(e.target.value);
 
@@ -287,6 +274,7 @@ export default {
       result2,
       dateApi,
       onChange,
+      onChange2,
       onChangeResult1,
       datetoday,
       currencies,
