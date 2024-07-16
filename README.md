@@ -1,5 +1,7 @@
 # vue-exchange-currency
 
+Demo : https://exchange-currency-vue.netlify.app
+
 ## Project setup
 ```
 npm install
