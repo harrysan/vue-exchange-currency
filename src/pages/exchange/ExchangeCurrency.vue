@@ -118,18 +118,18 @@
               </select>
             </div>
 
-            <base-button>Print</base-button>
+            <base-button @click="printPdf">Print</base-button>
           </div>
         </div>
       </div>
       <div class="row">
         <div class="col p-3">
-          <table class="table">
+          <table class="table" id="pdf">
             <thead>
               <tr>
-                <th scope="col">Rate</th>
+                <th scope="col">Currency</th>
                 <th scope="col">Name</th>
-                <th scope="col">1 {{ value3 }}</th>
+                <th scope="col">Rate {{ value3 }}</th>
               </tr>
             </thead>
             <tbody>
@@ -147,6 +147,7 @@
 </template>
 
 <script>
+import { jsPDF } from "jspdf";
 import dateFormat from "dateformat";
 import { useStore } from "vuex";
 import { reactive, ref } from "vue";
@@ -266,6 +267,36 @@ export default {
       });
     }
 
+    function printPdf() {
+      // Default export is a4 paper, portrait, using millimeters for units
+      const doc = new jsPDF();
+
+      const pdfElement = document.getElementById("pdf");
+      doc.html(pdfElement, {
+        callback: (pdf) => {
+          var totalPages = pdf.internal.getNumberOfPages();
+
+          for (var i = 2; i <= totalPages; i++) {
+            // Go to each page after the first and delete it
+            pdf.setPage(i);
+            pdf.deletePage(i);
+            i--;
+            totalPages--;
+          }
+
+          doc.text("Exchange Currency", 15, 15);
+          doc.line(15, 25, 190, 25);
+          pdf.save("exchange_currency.pdf");
+        },
+        x: 15,
+        y: 30,
+        width: 145, //target width in the PDF document
+        windowWidth: 650, //window width in CSS pixels
+        //margin: 32, // optional: page margin
+        // optional: other HTMLOptions
+      });
+    }
+
     return {
       value1,
       value2,
@@ -281,6 +312,7 @@ export default {
       isCopied1,
       isCopied2,
       copyText,
+      printPdf,
     };
   },
 };
